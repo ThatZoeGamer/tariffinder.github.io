@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tariffinder survey</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#EFF2F6;--ink:#14202E;--mut:#56657A;--line:#C5CFDB;--red:#C8102E;--onred:#fff;--tag:#FFD23F;--card:#fff;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1620;--ink:#E8EDF4;--mut:#95A4B7;--line:#2B3B4F;--red:#FF6B7D;--onred:#14202E;--card:#16212E;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E1620;--ink:#E8EDF4;--mut:#95A4B7;--line:#2B3B4F;--red:#FF6B7D;--onred:#14202E;--card:#16212E;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:400 1.125rem/1.5 Barlow,system-ui,Arial,sans-serif;display:flex;flex-direction:column;overflow-x:hidden}
+header{display:flex;align-items:center;gap:1rem;padding:.7rem 1.25rem}
+#bar{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+#bar i{display:block;height:100%;width:0;background:var(--red);transition:width .35s}
+main{flex:1;overflow-y:auto;padding:1rem 1.25rem 2rem}
+.s{max-width:46rem;margin:0 auto;min-height:100%;display:flex;flex-direction:column;justify-content:center;gap:1.2rem;animation:in .35s ease both}
+.s.up{--dy:-24px}
+@keyframes in{from{opacity:0;transform:translateY(var(--dy,24px))}}
+@media (prefers-reduced-motion:reduce){.s{animation:none}#bar i{transition:none}}
+p{margin:0}
+h1,h2,h3,.sub,.tag,.chip{font-family:'Barlow Condensed','Arial Narrow',sans-serif}
+h1{margin:0;font-size:clamp(3.4rem,13vw,6.5rem);line-height:.95;font-weight:700}
+h2{margin:0;font-size:clamp(1.9rem,5.4vw,2.9rem);line-height:1.08;font-weight:600}
+h3{margin:0 0 .6rem;font-size:1.4rem;line-height:1.1;font-weight:700}
+h3 span{font:400 1rem Barlow,sans-serif;margin-left:.4rem}
+.sub{margin:0;color:var(--red);font-size:clamp(1.4rem,4vw,2rem);line-height:1.1;font-weight:600}
+.lead{max-width:38rem}.mut{color:var(--mut);font-size:1rem}
+.in{width:100%;background:transparent;border:0;border-bottom:2px solid var(--line);border-radius:0;color:var(--ink);font:500 clamp(1.4rem,4vw,2rem)/1.3 Barlow,system-ui,sans-serif;padding:.4rem 0;outline:0;resize:none}
+.in:focus{border-color:var(--ink)}
+.in::placeholder{color:var(--mut);opacity:.7}
+.row{display:flex;flex-wrap:wrap;gap:.6rem}
+.col{display:flex;flex-direction:column;gap:.6rem}
+.chip,.opt{border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;border-radius:.4rem}
+.chip{min-width:3.4rem;height:3.4rem;font-size:1.6rem;font-weight:600}
+.opt{display:flex;gap:.8rem;width:100%;text-align:left;padding:.75rem 1rem;font:500 1.15rem/1.35 Barlow,system-ui,sans-serif}
+.opt kbd{font:600 .9rem Barlow,sans-serif;border:1.5px solid currentColor;border-radius:.25rem;padding:0 .4rem;height:1.4rem;flex:none}
+:is(.chip,.opt):hover{border-color:var(--red)}
+:is(.chip,.opt)[aria-pressed=true]{background:var(--tag);color:#14202E;border-color:#14202E}
+.ends{display:flex;justify-content:space-between;gap:1rem;color:var(--mut);font-size:1rem}
+.go{background:var(--red);color:var(--onred);border:0;border-radius:.4rem;padding:.7rem 1.4rem;font:600 1.15rem Barlow,system-ui,sans-serif;cursor:pointer}
+.go:disabled{opacity:.6}
+button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.act{display:flex;align-items:center;gap:.9rem;flex-wrap:wrap}
+.err{color:var(--red);min-height:1.5em;font-weight:500}
+.tag{position:relative;align-self:flex-start;background:var(--tag);color:#14202E;padding:1.1rem 1.6rem 1.1rem 3.4rem;clip-path:polygon(1.8rem 0,100% 0,100% 100%,1.8rem 100%,0 50%);font-size:clamp(1.4rem,4vw,2rem);line-height:1.1;font-weight:700}
+.tag b{display:block;font-size:clamp(3.4rem,13vw,6rem);line-height:1}
+.tag:before{content:"";position:absolute;left:1.9rem;top:50%;width:.75rem;height:.75rem;margin-top:-.375rem;border-radius:50%;background:var(--bg)}
+footer{display:flex;justify-content:space-between;align-items:center;padding:.6rem 1.25rem;color:var(--mut);font-size:1rem}
+footer div{display:flex;gap:.4rem}
+footer button{width:2.6rem;height:2.6rem;font-size:1.2rem;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:.4rem;cursor:pointer}
+footer button:disabled{opacity:.35;cursor:default}
+.ov{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:1.25rem;background:rgba(14,22,32,.75);animation:fade .25s ease both}
+.dlg{width:100%;max-width:28rem;display:flex;flex-direction:column;gap:1rem;padding:1.5rem;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:.6rem}
+.dlg h2{font-size:clamp(1.8rem,7vw,2.4rem)}
+@keyframes fade{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){.ov{animation:none}}
+</style>
+</head>
+<body>
+<header><div id="bar"><i></i></div></header>
+<main id="stage"></main>
+<footer><span id="cnt"></span><div><button id="up" aria-label="Previous question">↑</button><button id="dn" aria-label="Next question">↓</button></div></footer>
+<div id="lm" class="ov" role="dialog" aria-modal="true" aria-labelledby="lt"><div class="dlg"><h2 id="lt">Language · Langue</h2><p class="mut">Choose the language of the survey.<br>Choisissez la langue du sondage.</p><div class="col"><button class="opt" data-l="en"><kbd>E</kbd>English</button><button class="opt" data-l="fr"><kbd>F</kbd>Français</button></div></div></div>
+<script>
+/* SETUP: paste the Web app URL from your Google Apps Script deployment. */
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbz-sEXpHwJy5ZIQH6szXdVmNgge4G0Ldpx6yIsqWL_Jys2chYXmQuIo6vMSxMoifcLwqQ/exec';
+const $=s=>document.querySelector(s),stage=$('#stage');
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const S={
+en:{title:'Tariffinder survey',sub:'An app to help your wallet',
+intro:'Tariffs are changing what everyday things cost. Tariffinder is an iOS app that shows which products are hit by import taxes and which stay duty-free, across cars and building materials, groceries and consumer tech, so you can spend less by knowing more.',
+start:'Start',mins:'Takes about 2 minutes',cont:'Continue',enter:'press Enter',ok:'OK',submit:'Submit',sending:'Sending…',
+ph:'Type your answer here…',shift:'Shift + Enter for a new line',fb:'$1,900',fs:'per person, every year',
+fact:'Fun fact: did you know that recent tariffs could cost Canadians an estimated $1,900 per person annually? While many focus on the political side of trade, the actual cost hits regular households through higher prices on everyday goods and a shrinking economy.',
+src:'Source: Canadian Chamber of Commerce',
+eEmail:'Enter a valid email address, like name@example.com.',ePick:'Choose one option to continue.',eText:'This question needs an answer.',
+eSend:'Couldn’t save your answers. Check your connection and press Submit again.',
+tyb:'Thank you',tys:'Your answers are in',thanks:'Thanks',ty:'Your answers will help shape Tariffinder.',
+of:'of',prev:'Previous question',next:'Next question',
+note:'Heads up: this survey isn’t connected to a spreadsheet yet, so answers can’t be saved.'},
+fr:{title:'Sondage Tariffinder',sub:'Une application pour aider votre portefeuille',
+intro:'Les tarifs douaniers changent le prix des produits du quotidien. Tariffinder est une application iOS qui montre quels produits sont touchés par les taxes à l’importation et lesquels restent exempts de droits de douane, qu’il s’agisse de voitures, de matériaux de construction, d’épicerie ou de technologie grand public, pour que vous puissiez dépenser moins en étant mieux informé.',
+start:'Commencer',mins:'Environ 2 minutes',cont:'Continuer',enter:'appuyez sur Entrée',ok:'OK',submit:'Envoyer',sending:'Envoi en cours…',
+ph:'Tapez votre réponse ici…',shift:'Maj + Entrée pour une nouvelle ligne',fb:'1\u00a0900\u00a0$',fs:'par personne, chaque année',
+fact:'Le saviez-vous? Les récents tarifs douaniers pourraient coûter aux Canadiens environ 1\u00a0900\u00a0$ par personne chaque année. Si bien des gens s’attardent à l’aspect politique du commerce, le coût réel touche les ménages ordinaires par la hausse du prix des biens du quotidien et une économie en recul.',
+src:'Source\u00a0: Chambre de commerce du Canada',
+eEmail:'Entrez une adresse courriel valide, comme nom@exemple.com.',ePick:'Choisissez une option pour continuer.',eText:'Une réponse est requise pour cette question.',
+eSend:'Impossible d’enregistrer vos réponses. Vérifiez votre connexion et appuyez de nouveau sur Envoyer.',
+tyb:'Merci',tys:'Vos réponses ont été reçues',thanks:'Merci',ty:'Vos réponses aideront à façonner Tariffinder.',
+of:'sur',prev:'Question précédente',next:'Question suivante',
+note:'Attention\u00a0: ce sondage n’est pas encore relié à un tableur; les réponses ne peuvent donc pas être enregistrées.'}};
+const F=[{t:'intro'},
+{k:'email',t:'email',q:'Email',ph:'name@example.com',fr:{q:'Courriel',ph:'nom@exemple.com'}},
+{k:'name',t:'text',q:'Your name',fr:{q:'Votre nom'}},
+{k:'freq',t:'scale',q:'If this app was available today, how often would you use Tariffinder to help you save on everyday items?',a:1,z:5,lo:'Never',hi:'All the time',fr:{q:'Si cette application était disponible aujourd’hui, à quelle fréquence utiliseriez-vous Tariffinder pour économiser sur les articles du quotidien?',lo:'Jamais',hi:'Tout le temps'}},
+{k:'useful',t:'scale',q:'How useful do you think an app like this would be in your everyday shopping?',a:1,z:5,lo:'Not useful at all',hi:'Very useful',fr:{q:'À quel point une application comme celle-ci serait-elle utile dans vos achats de tous les jours?',lo:'Pas utile du tout',hi:'Très utile'}},
+{k:'pay',t:'scale',q:'How much would you be willing to pay for Tariffinder?',a:0,z:5,p:'$',fr:{q:'Combien seriez-vous prêt(e) à payer pour Tariffinder?'}},
+{t:'fact'},
+{k:'tools',t:'long',q:'What products or services are you currently using to find information on tariffs in Canada?',fr:{q:'Quels produits ou services utilisez-vous actuellement pour trouver de l’information sur les tarifs douaniers au Canada?'}},
+{k:'feat',t:'pick',q:'Which specific feature of Tariffinder would be the most appealing to you?',o:['Camera scanner: scan the product you want to buy and see how much tariff is implied','AI analysis of which grocery items have fewer tariffs and are a better buy','A list of all tariffs that apply to customers in Canada'],fr:{q:'Quelle fonctionnalité précise de Tariffinder vous attirerait le plus?',o:['Numérisation par caméra\u00a0: numérisez le produit que vous souhaitez acheter et voyez le montant de tarifs douaniers qu’il implique','Analyse par IA pour savoir quels articles d’épicerie sont moins touchés par les tarifs douaniers et représentent un meilleur achat','La liste de tous les tarifs douaniers qui s’appliquent aux consommateurs au Canada']}},
+{k:'wish',t:'long',q:'Any feature that you would want to have in an app like this?',fr:{q:'Y a-t-il une fonctionnalité que vous aimeriez retrouver dans une application comme celle-ci?'}},
+{k:'time',t:'scale',q:'How much time do you already spend finding information about tariffs on a specific item?',a:0,z:10,lo:'Nothing at all',hi:'A lot of time',fr:{q:'Combien de temps consacrez-vous déjà à chercher de l’information sur les tarifs douaniers d’un article en particulier?',lo:'Rien du tout',hi:'Beaucoup de temps'}},
+{k:'other',t:'long',q:'Any other suggestions or opinions? Don’t hesitate!',fr:{q:'D’autres suggestions ou opinions? N’hésitez pas!'}}];
+const END=F.length,NQ=F.filter(f=>f.k).length;
+let i=0,A={},mode='m',ready=false,tm,busy=false,lang='en';
+const T=k=>S[lang][k],loc=f=>f&&f.fr&&lang==='fr'?{...f,...f.fr}:f,page=['header','main','footer'];
+
+function view(n){
+ const f=loc(F[n]);
+ if(n===END)return `<section class="s"><div class="tag"><b>${T('tyb')}</b>${T('tys')}</div><p class="lead">${T('thanks')}${A.name?', '+esc(A.name.split(' ')[0]):''}. ${T('ty')}</p></section>`;
+ if(f.t==='intro')return `<section class="s"><h1>Tariffinder</h1><p class="sub">${T('sub')}</p><p class="lead">${T('intro')}</p><div class="act"><button class="go" data-a="n">${T('start')}</button><span class="mut">${T('mins')}</span></div><p class="err" id="note"></p></section>`;
+ if(f.t==='fact')return `<section class="s"><div class="tag"><b>${T('fb')}</b>${T('fs')}</div><p class="lead">${T('fact')} <span class="mut">${T('src')}</span></p><div class="act"><button class="go" data-a="n">${T('cont')}</button><span class="mut">${T('enter')}</span></div></section>`;
+ const v=A[f.k];let b='';
+ if(f.t==='email'||f.t==='text')b=`<input class="in" id="in" type="${f.t}" placeholder="${f.ph||T('ph')}" value="${esc(v||'')}" autocomplete="${f.t==='email'?'email':'name'}" aria-labelledby="q">`;
+ else if(f.t==='long')b=`<textarea class="in" id="in" rows="3" placeholder="${T('ph')}" aria-labelledby="q">${esc(v||'')}</textarea><p class="mut">${T('shift')}</p>`;
+ else if(f.t==='scale'){let c='';for(let x=f.a;x<=f.z;x++)c+=`<button class="chip" data-v="${x}" aria-pressed="${v===x}">${f.p?(lang==='fr'?x+'\u00a0'+f.p:f.p+x):x}</button>`;b=`<div class="row" role="group" aria-labelledby="q">${c}</div>`+(f.lo?`<div class="ends"><span>${f.lo}</span><span>${f.hi}</span></div>`:'')}
+ else b=`<div class="col" role="group" aria-labelledby="q">${f.o.map((o,x)=>`<button class="opt" data-v="${x}" aria-pressed="${v===x}"><kbd>${'ABC'[x]}</kbd>${o}</button>`).join('')}</div>`;
+ return `<section class="s"><h2 id="q">${f.q}</h2>${b}<p class="err" id="err" role="alert"></p><div class="act"><button class="go" data-a="n">${n===END-1?T('submit'):T('ok')}</button><span class="mut">${T('enter')}</span></div></section>`;
+}
+function show(n,d){
+ i=n;mode='s';stage.innerHTML=view(n);
+ if(d<0)stage.firstChild.classList.add('up');
+ $('#bar i').style.width=(100*n/END)+'%';
+ $('#cnt').textContent=n&&n<END?`${F.slice(0,n+1).filter(x=>x.k).length} ${T('of')} ${NQ}`:'';
+ $('#up').disabled=n===0||n===END;$('#dn').disabled=n===END;
+ $('footer').hidden=false;
+ const el=$('#in');if(el&&!matchMedia('(pointer:coarse)').matches)el.focus();
+ note();
+}
+function save(){const el=$('#in'),f=F[i];if(el&&f&&f.k)A[f.k]=el.value.trim()}
+function next(){
+ const f=F[i];if(!f)return;
+ if(f.k){save();const v=A[f.k];
+  if(v===undefined||v===''||(f.t==='email'&&!/^\S+@\S+\.\S+$/.test(v))){
+   $('#err').textContent=f.t==='email'?T('eEmail'):(f.t==='scale'||f.t==='pick')?T('ePick'):T('eText');return}}
+ i===END-1?send():show(i+1,1);
+}
+function pick(v){
+ const f=F[i];if(!f||(f.t!=='scale'&&f.t!=='pick'))return;
+ A[f.k]=v;stage.querySelectorAll('[data-v]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.v===v)));
+ $('#err').textContent='';clearTimeout(tm);tm=setTimeout(next,350);
+}
+async function send(){
+ if(busy)return;busy=true;const b=$('.go');b.disabled=true;b.textContent=T('sending');
+ try{if(SCRIPT_URL.startsWith('PASTE'))throw 0;await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(A)});show(END,1)}
+ catch(e){b.disabled=false;b.textContent=T('submit');$('#err').textContent=T('eSend')}
+ busy=false;
+}
+function note(){
+ const n=$('#note');if(!n)return;
+ n.textContent=ready&&SCRIPT_URL.startsWith('PASTE')?T('note'):'';
+}
+function init(){ready=true;note()}
+function ask(){mode='m';page.forEach(s=>$(s).inert=true);$('#lm .opt').focus()}
+function setLang(l){
+ lang=l;document.documentElement.lang=l;document.title=T('title');
+ $('#up').setAttribute('aria-label',T('prev'));$('#dn').setAttribute('aria-label',T('next'));
+ $('#lm').hidden=true;page.forEach(s=>$(s).inert=false);show(0);
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.l){setLang(b.dataset.l);return}
+ if(b.id==='up'){save();show(i-1,-1);return}
+ if(b.id==='dn'||b.dataset.a==='n'){next();return}
+ if(b.dataset.v!==undefined&&mode==='s'){pick(+b.dataset.v);return}
+});
+document.addEventListener('keydown',e=>{
+ if(e.metaKey||e.ctrlKey||e.altKey)return;
+ if(mode==='m'){const l={e:'en',f:'fr'}[e.key.toLowerCase()];if(l)setLang(l);return}
+ if(mode!=='s')return;
+ const f=F[i]||{},tx=e.target.tagName==='TEXTAREA';
+ if(e.key==='Enter'){if(e.target.tagName==='BUTTON'||(tx&&e.shiftKey))return;e.preventDefault();next();return}
+ if(e.target.matches('input,textarea')||e.key.length!==1)return;
+ if(f.t==='scale'&&/^\d$/.test(e.key)&&+e.key>=f.a&&+e.key<=f.z)pick(+e.key);
+ if(f.t==='pick'){const x='abc'.indexOf(e.key.toLowerCase());if(x>=0)pick(x)}
+});
+init();ask();
+</script>
+</body>
+</html>
