@@ -67,7 +67,6 @@ footer button:disabled{opacity:.35;cursor:default}
 <footer><span id="cnt"></span><div><button id="up" aria-label="Previous question">↑</button><button id="dn" aria-label="Next question">↓</button></div></footer>
 <div id="lm" class="ov" role="dialog" aria-modal="true" aria-labelledby="lt"><div class="dlg"><h2 id="lt">Language · Langue</h2><p class="mut">Choose the language of the survey.<br>Choisissez la langue du sondage.</p><div class="col"><button class="opt" data-l="en"><kbd>E</kbd>English</button><button class="opt" data-l="fr"><kbd>F</kbd>Français</button></div></div></div>
 <script>
-/* SETUP: paste the Web app URL from your Google Apps Script deployment. */
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbz-sEXpHwJy5ZIQH6szXdVmNgge4G0Ldpx6yIsqWL_Jys2chYXmQuIo6vMSxMoifcLwqQ/exec';
 const $=s=>document.querySelector(s),stage=$('#stage');
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
